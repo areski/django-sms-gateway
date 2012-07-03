@@ -46,13 +46,13 @@ class Gateway(models.Model):
     success_format = models.CharField(max_length=256, null=True, blank=True,
         help_text=_(u'A regular expression that parses the response'))
     
-#     check_number_url = models.CharField(max_length=256, null=True, blank=True,
-#         help_text=_(u'The URL that can be used to check availability of sending to a number'))
-#     check_number_field = models.CharField(max_length=65, null=True, blank=True,
-#         help_text=_(u'The keyword that contains the number to check'))
-#     check_number_response_format = models.CharField(max_length=256, null=True, blank=True,
-#         help_text=_(u'A regular expression that parses the response. Keys: status, charge'))
-#     check_number_status_mapping = jsonfield.JSONField(null=True, blank=True)
+    #check_number_url = models.CharField(max_length=256, null=True, blank=True,
+    #    help_text=_(u'The URL that can be used to check availability of sending to a number'))
+    #check_number_field = models.CharField(max_length=65, null=True, blank=True,
+    #    help_text=_(u'The keyword that contains the number to check'))
+    #check_number_response_format = models.CharField(max_length=256, null=True, blank=True,
+    #    help_text=_(u'A regular expression that parses the response. Keys: status, charge'))
+    #check_number_status_mapping = jsonfield.JSONField(null=True, blank=True)
     
     class Meta:
         app_label = 'sms'
@@ -112,8 +112,16 @@ class Gateway(models.Model):
         data = urllib.urlencode(raw_data)
         logging.debug(data)
         logging.debug(self)
-        # Now hit the server.
-        res = urllib.urlopen(self.base_url, data)
+        try:
+            # Now hit the server.
+            res = urllib.urlopen(self.base_url, data)
+        except:
+            message.status = "Failed"
+            message.status_message = "Error Connection Gateway"
+            message.send_date = datetime.datetime.now()
+            message.save()
+            #TODO : reschedule later
+            return message
         
         # Most servers will respond with something, which is only an
         # interim status, which we can get for now, and maybe update later.
@@ -153,5 +161,4 @@ class Gateway(models.Model):
             parsed_response = re.match(self.check_number_response_format, res_data).groupdict()
             status = self.check_number_status_mapping.get(parsed_response.get('status', None), None)
             charge = self.check_number_status_mapping.get(parsed_response.get('charge', None), None)
-            
-            
+

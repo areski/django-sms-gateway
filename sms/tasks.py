@@ -5,6 +5,10 @@ import logging
 from sms.models import Message, Gateway
 
 class SendMessage(Task):
+    """
+    Task to send SMS & update the message status on response
+    """
+
     def run(self, message_id, gateway_id=None, **kwargs):
         logging.debug("About to send a message.")
         

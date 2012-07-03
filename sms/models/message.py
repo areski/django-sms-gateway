@@ -2,16 +2,25 @@ from django.db import models
 from django.contrib.contenttypes import generic
 from django.utils.translation import ugettext as _
 from django.conf import settings
-
+from gateway import Gateway
 import uuidfield.fields
 import picklefield
+
+MESSAGE_STATUSES = (
+    ('Unsent', 'Unsent'),
+    ('Sent', 'Sent'),
+    ('Delivered', 'Delivered'),
+    ('Failed', 'Failed'),
+    ('No_Route', 'No_Route'),
+    ('Unauthorized', 'Unauthorized'),
+)
+
 if 'timezones' in settings.INSTALLED_APPS:
     from timezones.utils import adjust_datetime_to_timezone
 else:
     def adjust_datetime_to_timezone(a,b,c):
         return a
 
-from gateway import Gateway
 
 class MessageManager(models.Manager):
     def get_matching_message(self, datadict):
@@ -46,12 +55,7 @@ class MessageManager(models.Manager):
             gateway_charge=None).order_by('-send_date')[0]
         return m.gateway_charge/m.length
 
-MESSAGE_STATUSES = (
-    ('Unsent', 'Unsent'),
-    ('Sent', 'Sent'),
-    ('Delivered', 'Delivered'),
-    ('Failed', 'Failed'),
-)
+
 class Message(models.Model):
     """
     A Message.
@@ -67,13 +71,14 @@ class Message(models.Model):
         help_text=_(u'The international number of the recipient, without the leading +'))
     
     sender = models.ForeignKey('auth.User', related_name='sent_sms_messages')
+    
+    sender_number = models.CharField(max_length=32, null=True, blank=True,
+        help_text=_(u'The international number of the sender, without the leading +'))
     send_date = models.DateTimeField(null=True, blank=True, editable=False)
     delivery_date = models.DateTimeField(null=True, blank=True, editable=False)
     uuid = uuidfield.fields.UUIDField(auto=True, help_text=_(u'Used for associating replies.'))
     
-    status = models.CharField(max_length=16, choices=MESSAGE_STATUSES,
-        default="Unsent",
-    )
+    status = models.CharField(max_length=16, choices=MESSAGE_STATUSES, default="Unsent")
     status_message = models.CharField(max_length=128, null=True, blank=True)
     billed = models.BooleanField(default=False)
     
@@ -81,15 +86,13 @@ class Message(models.Model):
     object_id = models.PositiveIntegerField()
     billee = generic.GenericForeignKey()
     
-    gateway = models.ForeignKey('sms.Gateway', 
-        null=True, blank=True, editable=False)
-    gateway_message_id = models.CharField(max_length=128, 
-        blank=True, null=True, editable=False)
+    gateway = models.ForeignKey('sms.Gateway', null=True, blank=True)
+    gateway_message_id = models.CharField(max_length=128, blank=True, 
+                            null=True, editable=False)
     
     reply_callback = picklefield.PickledObjectField(null=True, blank=True)
-    
-    gateway_charge = models.DecimalField(max_digits=10, decimal_places=5,
-        null=True, blank=True)
+    gateway_charge = models.DecimalField(max_digits=10, decimal_places=5, 
+                            null=True, blank=True)
     
     objects = MessageManager()
     
