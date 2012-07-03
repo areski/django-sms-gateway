@@ -1,0 +1,71 @@
+[
+    {
+        "pk": 1, 
+        "model": "sms.gateway", 
+        "fields": {
+            "content_keyword": "text", 
+            "success_format": "ID: (?P<gateway_message_id>.+)", 
+            "name": "Clickatell", 
+            "status_status": "status", 
+            "settings": {
+                "api_id": "_API_ID_", 
+                "password": "_PASSWORD_", 
+                "from": "_SENDER_ID_", 
+                "user": "_USERNAME_", 
+                "concat": "3"
+            }, 
+            "status_date": "timestamp", 
+            "reply_sender": "", 
+            "base_url": "https://api.clickatell.com/http/sendmsg", 
+            "status_error_code": "status", 
+            "reply_date": "", 
+            "recipient_keyword": "to", 
+            "status_msg_id": "apiMsgId", 
+            "reply_date_format": "%Y-%m-%d %H:%M:%S", 
+            "status_mapping": {
+                "002": "Sent",
+                "003": "Delivered",
+                "004": "Delivered",
+                "011": "Sent",
+                "008": "Sent"
+            }, 
+            "uuid_keyword": "climsgid", 
+            "reply_content": "", 
+            "status_date_format": ""
+        }
+    }, 
+    {
+        "pk": 2, 
+        "model": "sms.gateway", 
+        "fields": {
+            "content_keyword": "text", 
+            "success_format": "OK: 0; .*SMSGlobalMsgID:(?P<gateway_message_id>.+)\r", 
+            "name": "SMS Global", 
+            "status_status": "dlrstatus", 
+            "settings": {
+                "from": "_SENDER_ID_", 
+                "maxsplit": "3", 
+                "api": 1, 
+                "user": "_USERNAME_", 
+                "action": "sendsms", 
+                "password": "_PASSWORD_"
+            }, 
+            "status_date": "donedate", 
+            "reply_sender": "from", 
+            "base_url": "http://www.smsglobal.com/http-api.php", 
+            "status_error_code": "dlr_err", 
+            "reply_date": "date", 
+            "recipient_keyword": "to", 
+            "status_msg_id": "msgid", 
+            "reply_date_format": "%Y-%m-%d %H:%M:%S", 
+            "status_mapping": {
+                "EXPIRED": "Failed", 
+                "UNDELIV": "Failed", 
+                "DELIVRD": "Delivered"
+            }, 
+            "uuid_keyword": "userfield", 
+            "reply_content": "msg", 
+            "status_date_format": "%y%m%d%H%M"
+        }
+    }
+]
