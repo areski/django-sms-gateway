@@ -5,9 +5,7 @@ from datetime import *
 
 class Provider(models.Model):
     """
-    Provider
-
-    This defines the SMS Provider you want to use to deliver your SMS messages.
+    Provider defines group or entity delivering SMS message
     Each provider will be associated to a Gateway which will link to the API of
     the Service Provider.
     """
@@ -22,7 +20,7 @@ class Provider(models.Model):
     created_date = models.DateTimeField(auto_now_add=True, verbose_name='Date')
     updated_date = models.DateTimeField(auto_now=True)
 
-    class Meta:        
+    class Meta:
         app_label = _('sms')
         verbose_name = _("Provider")
         verbose_name_plural = _("Providers")

@@ -4,7 +4,6 @@ from django.utils.translation import ugettext as _
 from sms.models import Gateway, Message, Reply, Provider
 
 
-
 class GatewayAdmin(admin.ModelAdmin):
     search_fields = ('name', 'settings')
     list_display = ('name', 'base_url', 'settings', 'recipient_keyword',
