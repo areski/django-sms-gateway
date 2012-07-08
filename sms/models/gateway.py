@@ -9,6 +9,7 @@ import unicodedata
 
 from django.conf import settings
 
+
 class Gateway(models.Model):
     """
     A Gateway is a sending endpoint, and associated authentication info
@@ -161,4 +162,3 @@ class Gateway(models.Model):
             parsed_response = re.match(self.check_number_response_format, res_data).groupdict()
             status = self.check_number_status_mapping.get(parsed_response.get('status', None), None)
             charge = self.check_number_status_mapping.get(parsed_response.get('charge', None), None)
-
