@@ -65,18 +65,17 @@ class Message(models.Model):
     pass in a unique value that will allow us to match up replies to original
     messages.
     """
-
     content = models.TextField(help_text=_(u'The body of the message.'))
     recipient_number = models.CharField(max_length=32,
         help_text=_(u'The international number of the recipient, without the leading +'))
 
     sender = models.ForeignKey('auth.User', related_name='sent_sms_messages')
-
     sender_number = models.CharField(max_length=32, null=True, blank=True,
         help_text=_(u'The international number of the sender, without the leading +'))
     send_date = models.DateTimeField(null=True, blank=True, editable=False)
     delivery_date = models.DateTimeField(null=True, blank=True, editable=False)
-    uuid = uuidfield.fields.UUIDField(auto=True, help_text=_(u'Used for associating replies.'))
+    uuid = uuidfield.fields.UUIDField(auto=True,
+        help_text=_(u'Used for associating replies.'))
 
     status = models.CharField(max_length=16, choices=MESSAGE_STATUSES,
         default="Unsent")

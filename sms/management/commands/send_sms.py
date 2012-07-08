@@ -1,5 +1,8 @@
 from django.core.management.base import BaseCommand
 from optparse import make_option
+from django.contrib.auth.models import User
+from django.contrib.contenttypes.models import ContentType
+from sms.models import Gateway, Message
 
 
 class Command(BaseCommand):
@@ -51,3 +54,26 @@ class Command(BaseCommand):
                         arg_gatewayid,
                         arg_message,
                         arg_recipient)
+
+        #Retrieve ContentType
+        content_type = ContentType.objects\
+                .get(app_label=str('sms'), model=str('message'))
+        object_id = 1
+
+        #Get Gateway
+        gateway = Gateway.objects.get(pk=arg_gatewayid)
+
+        #Get First User
+        admin_user = User.objects.get(pk=1)
+
+        #Create Message
+        new_msg = Message.objects.create(
+                    content='Hello there',
+                    recipient_number='+3465012397',
+                    sender=admin_user,
+                    content_type=content_type,
+                    object_id=object_id,
+                    gateway=gateway)
+        print new_msg
+
+        #Send Message
