@@ -12,6 +12,7 @@ setup(
         "sms",
         "sms.migrations",
         "sms.models",
+        "sms.management.commands",
     ],
     package_data={
         "": [
