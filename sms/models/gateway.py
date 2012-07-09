@@ -36,7 +36,8 @@ class Gateway(models.Model):
     status_status = models.CharField(max_length=128, null=True, blank=True)
     status_error_code = models.CharField(max_length=128, null=True, blank=True)
     status_date = models.CharField(max_length=128, null=True, blank=True)
-    status_date_format = models.CharField(max_length=128, null=True, blank=True)
+    status_date_format = models.CharField(max_length=128, null=True,
+        blank=True)
 
     reply_content = models.CharField(max_length=128, null=True, blank=True)
     reply_sender = models.CharField(max_length=128, null=True, blank=True)
@@ -85,13 +86,17 @@ class Gateway(models.Model):
         Actually do the work of sending the message. This is in a seperate
         method so we can background it it possible.
         """
-        assert message.status == "Unsent", "Re-sending SMS Messages not yet supported."
+        assert message.status == "Unsent", \
+            "Re-sending SMS Messages not yet supported."
         # We need to store the gateway that was used, so we can match up
         # which gateway a reply has come through.
         message.gateway = self
         # Build up a URL-encoded request.
         raw_data = {}
-        raw_data.update(**self.settings)
+        try:
+            raw_data.update(**self.settings)
+        except:
+            logging.debug("No gateway settings found")
         if message.recipient_number:
             raw_data[self.recipient_keyword] = message.recipient_number
         else:
@@ -106,9 +111,11 @@ class Gateway(models.Model):
         #     raw_data[self.content_keyword] = "".join(["%04x" % ord(x) for x in message.content])
         #     raw_data["unicode"] = 1
         # else:
-        raw_data[self.content_keyword] = unicodedata.normalize('NFKD', unicode(message.content)).encode('ascii', 'ignore')
+        raw_data[self.content_keyword] = unicodedata.normalize('NFKD', \
+            unicode(message.content)).encode('ascii', 'ignore')
         if self.uuid_keyword:
-            assert message.uuid, "Message must have a valid UUID. Has it been saved?"
+            assert message.uuid, \
+                "Message must have a valid UUID. Has it been saved?"
             raw_data[self.uuid_keyword] = message.uuid
         data = urllib.urlencode(raw_data)
         logging.debug(data)
@@ -133,14 +140,21 @@ class Gateway(models.Model):
             message.status_message = status_msg.split(': ')[1]
         else:
             message.status = "Sent"
-            parsed_response = re.match(self.success_format, status_msg).groupdict()
-            if 'gateway_message_id' in parsed_response and parsed_response['gateway_message_id']:
-                message.gateway_message_id = parsed_response['gateway_message_id'].strip()
-            if 'status_code' in parsed_response and parsed_response['status_code']:
-                message.status = self.status_mapping.get(parsed_response['status_code'])
-            if 'status_message' in parsed_response and parsed_response['status_message']:
+            parsed_response = re.match(self.success_format, status_msg)\
+                    .groupdict()
+            if 'gateway_message_id' in parsed_response \
+                and parsed_response['gateway_message_id']:
+                message.gateway_message_id = \
+                    parsed_response['gateway_message_id'].strip()
+            if 'status_code' in parsed_response \
+                and parsed_response['status_code']:
+                message.status = self.status_mapping\
+                    .get(parsed_response['status_code'])
+            if 'status_message' in parsed_response \
+                and parsed_response['status_message']:
                 message.status_message = parsed_response['status_message']
-            logging.debug("Gateway MSG ID %s [%i]" % (message.gateway_message_id, len(message.gateway_message_id)))
+            logging.debug("Gateway MSG ID %s [%i]" % \
+                (message.gateway_message_id, len(message.gateway_message_id)))
             message.send_date = datetime.datetime.now()
 
         message.save()
@@ -159,6 +173,10 @@ class Gateway(models.Model):
         res_data = res.read()
 
         if self.check_number_response_format:
-            parsed_response = re.match(self.check_number_response_format, res_data).groupdict()
-            status = self.check_number_status_mapping.get(parsed_response.get('status', None), None)
-            charge = self.check_number_status_mapping.get(parsed_response.get('charge', None), None)
+            parsed_response = re\
+                .match(self.check_number_response_format, res_data)\
+                .groupdict()
+            status = self.check_number_status_mapping\
+                .get(parsed_response.get('status', None), None)
+            charge = self.check_number_status_mapping\
+                .get(parsed_response.get('charge', None), None)

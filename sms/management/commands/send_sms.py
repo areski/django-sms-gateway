@@ -68,8 +68,8 @@ class Command(BaseCommand):
 
         #Create Message
         new_msg = Message.objects.create(
-                    content='Hello there',
-                    recipient_number='+3465012397',
+                    content=arg_message,
+                    recipient_number=arg_recipient,
                     sender=admin_user,
                     content_type=content_type,
                     object_id=object_id,
@@ -77,3 +77,4 @@ class Command(BaseCommand):
         print new_msg
 
         #Send Message
+        gateway._send(new_msg)
