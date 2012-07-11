@@ -150,6 +150,8 @@ class Gateway(models.Model):
                 and parsed_response['status_code']:
                 message.status = self.status_mapping\
                     .get(parsed_response['status_code'])
+                if not message.status:
+                    message.status = "Failed"
             if 'status_message' in parsed_response \
                 and parsed_response['status_message']:
                 message.status_message = parsed_response['status_message']
