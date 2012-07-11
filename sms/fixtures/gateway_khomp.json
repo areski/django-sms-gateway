@@ -1,0 +1,29 @@
+[
+    {
+        "pk":3,
+        "model":"sms.gateway",
+        "fields":{
+            "content_keyword":"message",
+            "success_format":"ID: (?P<gateway_message_id>[a-zA-Z0-9-]+) (?P<status_message>.+) (?P<status_code>[0-9]+)",
+            "name":"Khomp",
+            "status_status":"status",
+            "settings":null,
+            "status_date":"timestamp",
+            "reply_sender":"",
+            "base_url":"http://0.0.0.0:5000/v1.0/sendsms",
+            "status_error_code":"status",
+            "reply_date":"",
+            "recipient_keyword":"recipient",
+            "status_msg_id":"apiMsgId",
+            "reply_date_format":"%Y-%m-%d %H:%M:%S",
+            "status_mapping": {
+                "201": "Delivered",
+                "200": "Sent"
+            },
+            "uuid_keyword":"",
+            "reply_content":"",
+            "charge_keyword":"",
+            "status_date_format":""
+        }
+    }
+]
