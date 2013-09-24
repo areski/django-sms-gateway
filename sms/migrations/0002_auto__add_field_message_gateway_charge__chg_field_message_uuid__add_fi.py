@@ -7,24 +7,21 @@ from django.db import models
 class Migration(SchemaMigration):
 
     def forwards(self, orm):
-        
+
         # Adding field 'Message.gateway_charge'
         db.add_column('sms_message', 'gateway_charge', self.gf('django.db.models.fields.DecimalField')(null=True, max_digits=10, decimal_places=5, blank=True), keep_default=False)
 
         # Changing field 'Message.uuid'
-        db.alter_column('sms_message', 'uuid', self.gf('uuidfield.fields.UUIDField')(max_length=36, auto=True, null=True))
+        db.alter_column('sms_message', 'uuid', self.gf('uuidfield.fields.UUIDField')(max_length=36, auto=True, null=True, blank=True))
 
         # Adding field 'Gateway.charge_keyword'
         db.add_column('sms_gateway', 'charge_keyword', self.gf('django.db.models.fields.CharField')(max_length=128, null=True, blank=True), keep_default=False)
 
 
     def backwards(self, orm):
-        
+
         # Deleting field 'Message.gateway_charge'
         db.delete_column('sms_message', 'gateway_charge')
-
-        # Changing field 'Message.uuid'
-        db.alter_column('sms_message', 'uuid', self.gf('uuidfield.fields.UUIDField')(auto=True, max_length=32, null=True))
 
         # Deleting field 'Gateway.charge_keyword'
         db.delete_column('sms_gateway', 'charge_keyword')

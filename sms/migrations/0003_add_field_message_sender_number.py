@@ -15,7 +15,7 @@ class Migration(SchemaMigration):
 
 
         # Changing field 'Message.uuid'
-        db.alter_column('sms_message', 'uuid', self.gf('uuidfield.fields.UUIDField')(default=0, unique=True, max_length=32))
+        db.alter_column('sms_message', 'uuid', self.gf('uuidfield.fields.UUIDField')(auto=True, max_length=36, null=True))
     def backwards(self, orm):
         # Deleting field 'Message.sender_number'
         db.delete_column('sms_message', 'sender_number')
