@@ -1,6 +1,6 @@
 from django.db import models
 import jsonfield
-import urllib
+import requests
 import datetime
 from django.utils.translation import ugettext as _
 import logging
@@ -18,12 +18,14 @@ class Gateway(models.Model):
 
     name = models.CharField(max_length=128)
     base_url = models.URLField()
-    settings = jsonfield.fields.JSONField(null=True, blank=True,
+    settings = jsonfield.fields.JSONField(
+        null=True, blank=True,
         help_text=_(u'A JSON Dictionary of key-value pairs that will be '
-            'used for every message. Authorisation credentials should go '
-            'in here, for example.'
-        ))
-    recipient_keyword = models.CharField(max_length=128,
+                    'used for every message. Authorisation credentials should go '
+                    'in here, for example.'
+                    ))
+    recipient_keyword = models.CharField(
+        max_length=128,
         help_text=_(u'The keyword that is used in the request to identify the recipient number.')
     )
     content_keyword = models.CharField(max_length=128)
@@ -36,8 +38,7 @@ class Gateway(models.Model):
     status_status = models.CharField(max_length=128, null=True, blank=True)
     status_error_code = models.CharField(max_length=128, null=True, blank=True)
     status_date = models.CharField(max_length=128, null=True, blank=True)
-    status_date_format = models.CharField(max_length=128, null=True,
-        blank=True)
+    status_date_format = models.CharField(max_length=128, null=True, blank=True)
 
     reply_content = models.CharField(max_length=128, null=True, blank=True)
     reply_sender = models.CharField(max_length=128, null=True, blank=True)
@@ -117,12 +118,11 @@ class Gateway(models.Model):
             assert message.uuid, \
                 "Message must have a valid UUID. Has it been saved?"
             raw_data[self.uuid_keyword] = message.uuid
-        data = urllib.urlencode(raw_data)
-        logging.debug(data)
+        logging.debug(raw_data)
         logging.debug(self)
         try:
             # Now hit the server.
-            res = urllib.urlopen(self.base_url, data)
+            res = requests.get(self.base_url, params=raw_data)
         except:
             message.status = "Failed"
             message.status_message = "Error Connection Gateway"
@@ -133,7 +133,8 @@ class Gateway(models.Model):
 
         # Most servers will respond with something, which is only an
         # interim status, which we can get for now, and maybe update later.
-        status_msg = res.read()
+        #status_msg = res.read()
+        status_msg = res.text
         logging.debug(status_msg)
         if status_msg.startswith('ERR') or status_msg.startswith('WARN'):
             message.status = "Failed"
@@ -170,13 +171,11 @@ class Gateway(models.Model):
         raw_data = {}
         raw_data.update(**self.settings)
         raw_data[self.check_number_field] = number
-        data = urllib.urlencode(raw_data)
-        res = urllib.urlopen(self.check_number_url, data)
-        res_data = res.read()
+        res = requests.get(self.check_number_url, params=raw_data)
 
         if self.check_number_response_format:
             parsed_response = re\
-                .match(self.check_number_response_format, res_data)\
+                .match(self.check_number_response_format, res.text)\
                 .groupdict()
             status = self.check_number_status_mapping\
                 .get(parsed_response.get('status', None), None)

@@ -1,9 +1,9 @@
-from distutils.core import setup
+from setuptools import setup
 
 
 setup(
     name="django-sms-gateway",
-    version="0.1.1",
+    version="0.1.3",
     description="django generic sms through gateway",
     url="http://bitbucket.org/schinckel/django-sms-gateway",
     author="Matthew Schinckel",
@@ -20,10 +20,14 @@ setup(
             "fixtures/*",
         ]
     },
+    install_requires=[
+        'requests>=2.2',
+    ],
     classifiers=[
         'Programming Language :: Python',
         'License :: Other/Proprietary License',
         'Operating System :: OS Independent',
         'Framework :: Django',
+        'Topic :: Software Development :: Libraries :: Python Modules'
     ],
 )
