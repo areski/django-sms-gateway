@@ -135,29 +135,23 @@ class Gateway(models.Model):
         # interim status, which we can get for now, and maybe update later.
         #status_msg = res.read()
         status_msg = res.text
+
         logging.debug(status_msg)
         if status_msg.startswith('ERR') or status_msg.startswith('WARN'):
             message.status = "Failed"
             message.status_message = status_msg.split(': ')[1]
         else:
             message.status = "Sent"
-            parsed_response = re.match(self.success_format, status_msg)\
-                    .groupdict()
-            if 'gateway_message_id' in parsed_response \
-                and parsed_response['gateway_message_id']:
-                message.gateway_message_id = \
-                    parsed_response['gateway_message_id'].strip()
-            if 'status_code' in parsed_response \
-                and parsed_response['status_code']:
-                message.status = self.status_mapping\
-                    .get(parsed_response['status_code'])
+            parsed_response = re.match(self.success_format, status_msg).groupdict()
+            if 'gateway_message_id' in parsed_response and parsed_response['gateway_message_id']:
+                message.gateway_message_id = parsed_response['gateway_message_id'].strip()
+            if 'status_code' in parsed_response and parsed_response['status_code']:
+                message.status = self.status_mapping.get(parsed_response['status_code'])
                 if not message.status:
                     message.status = "Failed"
-            if 'status_message' in parsed_response \
-                and parsed_response['status_message']:
+            if 'status_message' in parsed_response and parsed_response['status_message']:
                 message.status_message = parsed_response['status_message']
-            logging.debug("Gateway MSG ID %s [%i]" % \
-                (message.gateway_message_id, len(message.gateway_message_id)))
+            logging.debug("Gateway MSG ID %s [%i]" % (message.gateway_message_id, len(message.gateway_message_id)))
             message.send_date = datetime.datetime.now()
 
         message.save()
