@@ -117,7 +117,7 @@ class Gateway(models.Model):
         if self.uuid_keyword:
             assert message.uuid, \
                 "Message must have a valid UUID. Has it been saved?"
-            raw_data[self.uuid_keyword] = message.uuid
+            raw_data[self.uuid_keyword] = str(message.uuid)
         logging.debug(raw_data)
         logging.debug(self)
         try:
