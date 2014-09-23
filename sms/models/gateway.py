@@ -2,7 +2,7 @@ from django.db import models
 import jsonfield
 import requests
 import datetime
-from django.utils.translation import ugettext as _
+from django.utils.translation import ugettext_lazy as _
 import logging
 import re
 import unicodedata
@@ -20,13 +20,13 @@ class Gateway(models.Model):
     base_url = models.URLField()
     settings = jsonfield.fields.JSONField(
         null=True, blank=True,
-        help_text=_(u'A JSON Dictionary of key-value pairs that will be '
+        help_text=_('A JSON Dictionary of key-value pairs that will be '
                     'used for every message. Authorisation credentials should go '
                     'in here, for example.'
                     ))
     recipient_keyword = models.CharField(
         max_length=128,
-        help_text=_(u'The keyword that is used in the request to identify the recipient number.')
+        help_text=_('The keyword that is used in the request to identify the recipient number.')
     )
     content_keyword = models.CharField(max_length=128)
     uuid_keyword = models.CharField(max_length=128, null=True, blank=True)
@@ -47,7 +47,7 @@ class Gateway(models.Model):
         default="%Y-%m-%d %H:%M:%S")
 
     success_format = models.CharField(max_length=256, null=True, blank=True,
-        help_text=_(u'A regular expression that parses the response'))
+        help_text=_('A regular expression that parses the response'))
 
     #check_number_url = models.CharField(max_length=256, null=True, blank=True,
     #    help_text=_(u'The URL that can be used to check availability of sending to a number'))
