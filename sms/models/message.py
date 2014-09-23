@@ -1,6 +1,6 @@
 from django.db import models
 from django.contrib.contenttypes import generic
-from django.utils.translation import ugettext as _
+from django.utils.translation import ugettext_lazy as _
 from django.conf import settings
 from gateway import Gateway
 import uuidfield.fields
@@ -65,17 +65,17 @@ class Message(models.Model):
     pass in a unique value that will allow us to match up replies to original
     messages.
     """
-    content = models.TextField(help_text=_(u'The body of the message.'))
+    content = models.TextField(help_text=_('The body of the message.'))
     recipient_number = models.CharField(max_length=32,
-        help_text=_(u'The international number of the recipient, without the leading +'))
+        help_text=_('The international number of the recipient, without the leading +'))
 
     sender = models.ForeignKey('auth.User', related_name='sent_sms_messages')
     sender_number = models.CharField(max_length=32, null=True, blank=True,
-        help_text=_(u'The international number of the sender, without the leading +'))
+        help_text=_('The international number of the sender, without the leading +'))
     send_date = models.DateTimeField(null=True, blank=True, editable=False)
     delivery_date = models.DateTimeField(null=True, blank=True, editable=False)
     uuid = uuidfield.fields.UUIDField(auto=True,
-        help_text=_(u'Used for associating replies.'))
+        help_text=_('Used for associating replies.'))
 
     status = models.CharField(max_length=16, choices=MESSAGE_STATUSES,
         default="Unsent")

@@ -1,5 +1,5 @@
 from django.db import models
-from django.utils.translation import ugettext as _
+from django.utils.translation import ugettext_lazy as _
 from datetime import *
 
 
@@ -15,15 +15,15 @@ class Provider(models.Model):
                                help_text=_("Short description about Provider"))
     metric = models.IntegerField(default=10, verbose_name='Metric',
                                  help_text=_("Enter metric in digit"))
-    gateway = models.ForeignKey('sms.Gateway', null=True, blank=True,
-                                help_text=_("Select Gateway"))
+    # gateway = models.ForeignKey('sms.Gateway', null=True, blank=True,
+    #                             help_text=_("Select Gateway"))
     created_date = models.DateTimeField(auto_now_add=True, verbose_name='Date')
     updated_date = models.DateTimeField(auto_now=True)
 
     class Meta:
-        app_label = _('sms')
+        app_label = 'sms'
         verbose_name = _("Provider")
         verbose_name_plural = _("Providers")
 
     def __unicode__(self):
-            return u"%s" % self.name
+            return "%s" % self.name
