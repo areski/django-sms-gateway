@@ -22,6 +22,9 @@ setup(
     },
     install_requires=[
         'requests>=2.2',
+        'django-jsonfield>=0.9.13',
+        'django-picklefield>=0.3.1',
+        'django-uuidfield>=0.5.0',
     ],
     classifiers=[
         'Programming Language :: Python',
