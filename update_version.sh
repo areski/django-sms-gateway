@@ -1,6 +1,6 @@
 #
 # Usage:
-#   ./update_version.sh 0.6.2
+#   ./update_version.sh 0.1.6
 #
 
 git flow release start v$1
@@ -11,4 +11,4 @@ sed -i -e "s/version=\".*\"/version=\"$1\"/g" setup.py
 #git commit docs audiofield/__init__.py -m "Update to version v$1"
 git commit -a -m "Update to version v$1"
 git flow release finish v$1
-python setup.py sdist upload -r pypi
+#python setup.py sdist upload -r pypi

@@ -153,12 +153,12 @@ class ProviderAdmin(admin.ModelAdmin):
     fieldsets = (
         (_('Provider Detail'), {
             #'classes':('collapse', ),
-            'fields': ('name', 'description', 'gateway', 'metric'),
+            'fields': ('name', 'description', 'metric'),  # 'gateway',
         }),
     )
-    list_display = ('id', 'name', 'gateway', 'metric', 'updated_date')
+    list_display = ('id', 'name', 'metric', 'updated_date')  # 'gateway',
     list_display_links = ('name', )
-    list_filter = ['gateway', 'metric']
+    list_filter = ['metric',]  # 'gateway',
     ordering = ('id', )
 
     def get_urls(self):

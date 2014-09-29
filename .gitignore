@@ -28,3 +28,5 @@ pip-log.txt
 
 #Sublime Editor
 *.sublime-*
+
+db.sqlite3
