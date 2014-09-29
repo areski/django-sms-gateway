@@ -27,10 +27,15 @@ setup(
         'django-uuidfield>=0.5.0',
     ],
     classifiers=[
-        'Programming Language :: Python',
-        'License :: Other/Proprietary License',
+        'Development Status :: 5 - Production/Stable',
+        'Environment :: Console',
+        'Intended Audience :: Developers',
+        'License :: OSI Approved :: MIT License',
         'Operating System :: OS Independent',
-        'Framework :: Django',
-        'Topic :: Software Development :: Libraries :: Python Modules'
+        'Programming Language :: Python',
+        'Programming Language :: Python :: 2',
+        'Programming Language :: Python :: 2.6',
+        'Programming Language :: Python :: 2.7',
+        'Topic :: Software Development :: Libraries :: Python Modules',
     ],
 )
