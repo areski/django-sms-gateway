@@ -3,7 +3,7 @@ from setuptools import setup
 
 setup(
     name="django-sms-gateway",
-    version="0.1.6",
+    version="0.2.0",
     description="django generic sms through gateway",
     url="http://bitbucket.org/schinckel/django-sms-gateway",
     author="Matthew Schinckel",
