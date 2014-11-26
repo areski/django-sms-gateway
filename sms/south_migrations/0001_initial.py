@@ -62,7 +62,7 @@ class Migration(migrations.Migration):
                 ('gateway_charge', models.DecimalField(null=True, max_digits=10, decimal_places=5, blank=True)),
                 ('content_type', models.ForeignKey(to='contenttypes.ContentType')),
                 ('gateway', models.ForeignKey(blank=True, to='sms.Gateway', null=True)),
-                ('sender', models.ForeignKey(related_name='sent_sms_messages', to=settings.AUTH_USER_MODEL)),
+                ('sender', models.ForeignKey(related_name=b'sent_sms_messages', to=settings.AUTH_USER_MODEL)),
             ],
             options={
                 'ordering': ('send_date',),
@@ -92,7 +92,7 @@ class Migration(migrations.Migration):
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
                 ('content', models.TextField()),
                 ('date', models.DateTimeField()),
-                ('message', models.ForeignKey(related_name='replies', to='sms.Message')),
+                ('message', models.ForeignKey(related_name=b'replies', to='sms.Message')),
             ],
             options={
                 'verbose_name_plural': 'replies',
